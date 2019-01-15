@@ -1,11 +1,11 @@
-const path = require("path");
+const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: "./src/js/main.js",
+  entry: './src/js/main.js',
   output: {
-    path: path.resolve(__dirname, "public"),
-    filename: "bundle.js"
+    path: path.resolve(__dirname, 'public'),
+    filename: 'bundle.js'
   },
   module: {
     rules: [
@@ -13,9 +13,9 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules)/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["babel-preset-env"]
+            presets: ['babel-preset-env']
           }
         }
       }

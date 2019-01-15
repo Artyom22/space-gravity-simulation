@@ -1,11 +1,13 @@
 /* global THREE */
 import { Skybox } from './skybox';
+import { SpaceObjects } from './SpaceObjects';
 
 export class SceneManager {
   constructor () {
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
-    this.renderer = new THREE.WebGLRenderer();
+    this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100000);
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.spaceObjects = new SpaceObjects();
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.render = this.render.bind(this);
@@ -17,6 +19,26 @@ export class SceneManager {
     this.initRenderer();
     this.scene.background = new Skybox().createReflectionCube();
     this.scene.add(this.createOrbitControls());
+    this.generatePlanet();
+    this.generateSpaceObjects();
+  }
+
+  generateSpaceObjects () {
+    for (var i = 0; i < 1; i++) {
+      const position = {
+        x: Math.random() * 1000 - 500,
+        y: Math.random() * 1000 - 500,
+        z: Math.random() * 1000 - 500
+      };
+      const scale = Math.random() * 3 + 1;
+      this.scene.add(this.spaceObjects.createSphere(position, scale));
+      this.spaceObjects.createSpherePhysic(position, scale);
+    }
+  }
+
+  generatePlanet () {
+    this.scene.add(this.spaceObjects.createPlanet());
+    this.spaceObjects.createPlanetPhysic();
   }
 
   initRenderer () {
@@ -28,8 +50,8 @@ export class SceneManager {
   }
 
   initCamera () {
-    this.camera.lookAt(0, 200, 0);
-    this.camera.position.set(1000, 500, 1000);
+    // this.camera.lookAt(0, 200, 0);
+    this.camera.position.set(1000, 3200, 1000);
   }
 
   createOrbitControls () {
@@ -59,9 +81,11 @@ export class SceneManager {
   animate () {
     // eslint-disable-next-line no-undef
     requestAnimationFrame(this.animate);
+    this.render();
   }
 
   render () {
     this.renderer.render(this.scene, this.camera);
+    this.spaceObjects.render();
   }
 }
