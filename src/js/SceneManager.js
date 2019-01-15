@@ -1,6 +1,8 @@
 /* global THREE */
 import { Skybox } from './skybox';
 import { SpaceObjects } from './SpaceObjects';
+import { Planet } from './Planet';
+import { SpacePhysic } from './SpacePhysic';
 
 export class SceneManager {
   constructor () {
@@ -8,6 +10,7 @@ export class SceneManager {
     this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.spaceObjects = new SpaceObjects();
+    this.physic = new SpacePhysic();
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.render = this.render.bind(this);
@@ -24,21 +27,22 @@ export class SceneManager {
   }
 
   generateSpaceObjects () {
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 3; i++) {
       const position = {
         x: Math.random() * 1000 - 500,
         y: Math.random() * 1000 - 500,
         z: Math.random() * 1000 - 500
       };
       const scale = Math.random() * 3 + 1;
-      this.scene.add(this.spaceObjects.createSphere(position, scale));
-      this.spaceObjects.createSpherePhysic(position, scale);
+      const mesh = this.spaceObjects.createSphere(position, scale);
+      this.physic.createSpherePhysic(position, scale, mesh);
+      this.scene.add(mesh);
     }
   }
 
   generatePlanet () {
-    this.scene.add(this.spaceObjects.createPlanet());
-    this.spaceObjects.createPlanetPhysic();
+    this.scene.add(new Planet().getPlanet());
+    this.physic.createPlanetPhysic();
   }
 
   initRenderer () {
@@ -86,6 +90,6 @@ export class SceneManager {
 
   render () {
     this.renderer.render(this.scene, this.camera);
-    this.spaceObjects.render();
+    this.physic.render();
   }
 }
