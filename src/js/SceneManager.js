@@ -27,13 +27,14 @@ export class SceneManager {
   }
 
   generateSpaceObjects () {
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 6; i++) {
       const position = {
-        x: Math.random() * 1000 - 500,
-        y: Math.random() * 1000 - 500,
-        z: Math.random() * 1000 - 500
+        x: Math.random() * 10000 - 5000,
+        y: Math.random() * 10000 - 5000,
+        z: Math.random() * 10000 - 5000
       };
-      const scale = Math.random() * 3 + 1;
+      const scaleUnit = Math.random();
+      const scale = scaleUnit > 0.5 ? scaleUnit * 400 : scaleUnit * 600;
       const mesh = this.spaceObjects.createSphere(position, scale);
       this.physic.createSpherePhysic(position, scale, mesh);
       this.scene.add(mesh);
