@@ -4,7 +4,6 @@ export class Planet {
   constructor () {
     this.geometry = new THREE.SphereBufferGeometry(500, 32, 16);
     const texture = new THREE.TextureLoader().load('/assets/images/2k_mars.jpg');
-
     this.material = new THREE.MeshBasicMaterial({ map: texture });
   }
 
@@ -13,7 +12,6 @@ export class Planet {
     this.planet.position.x = 0;
     this.planet.position.y = 0;
     this.planet.position.z = 0;
-    // this.planet.scale.x = this.planet.scale.y = this.planet.scale.z = 5.5;
     this.planet.quaternions = true;
   }
 

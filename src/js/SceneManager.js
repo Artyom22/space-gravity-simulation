@@ -1,5 +1,5 @@
 /* global THREE */
-import { Skybox } from './skybox';
+import { Skybox } from './Skybox';
 import { SpaceObjects } from './SpaceObjects';
 import { Planet } from './Planet';
 import { SpacePhysic } from './SpacePhysic';
@@ -7,6 +7,7 @@ import { SpacePhysic } from './SpacePhysic';
 export class SceneManager {
   constructor () {
     this.scene = new THREE.Scene();
+    // vertical_field_of_view, aspect_ratio, near, far
     this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.spaceObjects = new SpaceObjects();
@@ -27,7 +28,7 @@ export class SceneManager {
   }
 
   generateSpaceObjects () {
-    for (var i = 0; i < 6; i++) {
+    for (let i = 0; i < 10; i++) {
       const position = {
         x: Math.random() * 10000 - 5000,
         y: Math.random() * 10000 - 5000,
@@ -35,8 +36,8 @@ export class SceneManager {
       };
       const scaleUnit = Math.random();
       const scale = scaleUnit > 0.5 ? scaleUnit * 400 : scaleUnit * 600;
-      const mesh = this.spaceObjects.createSphere(position, scale);
-      this.physic.createSpherePhysic(position, scale, mesh);
+      const mesh = this.spaceObjects.createMoon(position, scale);
+      this.physic.createMoonPhysic(position, scale, mesh);
       this.scene.add(mesh);
     }
   }
@@ -47,7 +48,6 @@ export class SceneManager {
   }
 
   initRenderer () {
-    this.renderer.setClearColor(0xffffff);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
@@ -55,7 +55,6 @@ export class SceneManager {
   }
 
   initCamera () {
-    // this.camera.lookAt(0, 200, 0);
     this.camera.position.set(1000, 3200, 1000);
   }
 
