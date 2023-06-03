@@ -9,6 +9,7 @@ export class SceneManager {
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.render = this.render.bind(this);
+    this.eventListeners = [];
   }
 
   init () {
@@ -37,10 +38,16 @@ export class SceneManager {
     orbit.update();
     orbit.addEventListener('change', this.render);
     const control = new THREE.TransformControls(this.camera, this.renderer.domElement);
-    control.addEventListener('change', this.render);
-    control.addEventListener('dragging-changed', event => {
+    const changeListener = this.render;
+    const draggingChangeListener = event => {
       orbit.enabled = !event.value;
-    });
+    };
+    control.addEventListener('change', changeListener);
+    control.addEventListener('dragging-changed', draggingChangeListener);
+
+    this.eventListeners.push({ name: 'change', cb: changeListener });
+    this.eventListeners.push({ name: 'dragging-changed', cb: draggingChangeListener });
+
     return control;
   }
 
@@ -63,5 +70,11 @@ export class SceneManager {
 
   render () {
     this.renderer.render(this.scene, this.camera);
+  }
+
+  onDestroy() {
+    this.eventListeners.forEach(listener => {
+      removeEventListener(listener.name, listener.cb);
+    });
   }
 }
